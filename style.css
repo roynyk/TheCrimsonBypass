@@ -1,0 +1,516 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* ==========================================================================
+   DESIGN SYSTEM & VARIABLES
+   ========================================================================== */
+:root {
+    --bg-color: #030303;
+    --text-color: #d6d6d6;
+    --crimson: #9e0c0c;
+    --crimson-bright: #ff2e2e;
+    --crimson-glow: rgba(158, 12, 12, 0.6);
+    --flashlight-radius: 130px;
+    --mouse-x: 50vw;
+    --mouse-y: 50vh;
+}
+
+/* Reset Dasar */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none; /* Mencegah seleksi teks demi imersi game */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Courier Prime', Courier, monospace;
+    font-size: 17px;
+    line-height: 1.8;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ==========================================================================
+   EFEK VISUAL ATMOSFERIK (CRT, VIGNETTE, SENTER)
+   ========================================================================== */
+
+/* Efek Senter (Flashlight Effect) - Hanya aktif jika kelas flashlight-active ada di body */
+body.flashlight-active::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999; /* Berada di atas teks, di bawah CRT */
+    background: radial-gradient(
+        circle var(--flashlight-radius) at var(--mouse-x) var(--mouse-y),
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.96) 100%
+    );
+    transition: background 0.15s ease-out;
+}
+
+/* Efek Scanlines CRT */
+.crt-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.1;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.08) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+    0% { opacity: 0.09; }
+    50% { opacity: 0.12; }
+    100% { opacity: 0.10; }
+}
+
+/* Vignette (Tepian Layar Gelap Melingkar) */
+.vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+    background: radial-gradient(
+        circle,
+        transparent 40%,
+        rgba(0,0,0,0.92) 100%
+    );
+}
+
+/* ==========================================================================
+   LAYOUT CONTAINERS
+   ========================================================================== */
+#game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 5;
+}
+
+/* ==========================================================================
+   SCREEN: INTRO / AUDIO ACTIVATION
+   ========================================================================== */
+#intro-screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    z-index: 20;
+}
+
+.intro-content {
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+}
+
+#intro-bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.58; /* Meningkatkan kepadatan visual glitch agar lebih hidup */
+    filter: grayscale(15%) contrast(140%) brightness(65%); /* Meningkatkan kecerahan dari 35% ke 65% */
+    pointer-events: none;
+}
+
+#intro-screen.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+.intro-sub {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 40px;
+}
+
+.warning-box {
+    border: 1px solid rgba(158, 12, 12, 0.3);
+    background: rgba(40, 0, 0, 0.15);
+    padding: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 15px rgba(158, 12, 12, 0.05);
+}
+
+.warning-text {
+    color: var(--crimson-bright);
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.warning-sub {
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.6;
+}
+
+#start-button {
+    background: transparent;
+    border: 1px solid var(--crimson);
+    color: var(--crimson-bright);
+    padding: 15px 35px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--crimson);
+    box-shadow: 0 0 10px rgba(158, 12, 12, 0.1);
+}
+
+#start-button:hover {
+    background: var(--crimson);
+    color: #fff;
+    box-shadow: 0 0 20px var(--crimson-bright);
+    text-shadow: 0 0 8px #fff;
+    transform: translateY(-2px);
+}
+
+#start-button:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   SCREEN: GAME STORY PLAYROOM
+   ========================================================================== */
+#story-screen {
+    width: 100%;
+    max-width: 1080px; /* Dipadatkan kembali ke 1080px agar teks berkumpul di area tengah yang nyaman dibaca */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    transition: opacity 1.5s ease;
+}
+
+#story-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#story-wrapper {
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 20px 0px; /* Menghilangkan padding horizontal karena kotak dihilangkan */
+    background: transparent; /* Menghapus latar belakang kotak */
+    border: none; /* Menghapus bingkai tipis merah darah sesuai keinginan user */
+    box-shadow: none; /* Menghapus bayangan kotak */
+    backdrop-filter: none; /* Menghapus efek buram */
+    scrollbar-width: thin;
+    scrollbar-color: #2b0000 black;
+}
+
+/* Custom Scrollbar */
+#story-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+#story-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#story-wrapper::-webkit-scrollbar-thumb {
+    background: #2b0000;
+    border-radius: 3px;
+}
+
+#story-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--crimson);
+}
+
+/* ==========================================================================
+   ELEMENT STYLES: STORY TEXT & HEADER
+   ========================================================================== */
+#scene-header {
+    text-align: center;
+    font-size: 38px !important; /* Diperbesar dari 32px agar lebih berwibawa */
+    letter-spacing: 5px;
+    margin-bottom: 40px;
+    animation: text-pulse 3s infinite alternate;
+}
+
+@keyframes text-pulse {
+    from {
+        text-shadow: 0 0 10px var(--crimson), 0 0 20px var(--crimson-glow);
+    }
+    to {
+        text-shadow: 0 0 15px var(--crimson-bright), 0 0 30px var(--crimson);
+    }
+}
+
+#text-container p {
+    margin-bottom: 30px;
+    font-size: 21px; /* Font diperbesar dari 17px agar mendominasi layar */
+    line-height: 1.9; /* Jarak baris diatur lebih renggang agar sangat sinematik */
+    color: #c9c9c9;
+    text-shadow: 0 0 3px rgba(255,255,255,0.02);
+    opacity: 0; /* Dikendalikan JS saat pengetikan */
+    transform: translateY(5px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#text-container p.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#text-container p.slow-fade {
+    transition: opacity 4.0s cubic-bezier(0.25, 1, 0.25, 1), transform 4.0s cubic-bezier(0.25, 1, 0.25, 1);
+}
+
+/* Staggered column layouts for horror disorientation (Strict 2-Column Left & Right) */
+.story-p-left {
+    margin-left: 0;
+    margin-right: auto;
+    width: 50%; /* Tepat membagi layar menjadi 50% di sisi kiri */
+    text-align: left;
+}
+
+.story-p-right {
+    margin-left: auto;
+    margin-right: 0;
+    width: 50%; /* Tepat membagi layar menjadi 50% di sisi kanan */
+    text-align: left;
+}
+
+/* Teks Efek Suara SFX */
+.sfx {
+    color: #ff7777;
+    font-style: italic;
+    letter-spacing: 0.5px;
+}
+
+/* Teks Monolog / Kutipan Penting */
+blockquote {
+    border-left: 3px solid var(--crimson);
+    padding-left: 20px;
+    margin: 25px 0;
+    color: #ffb3b3;
+    font-style: italic;
+}
+
+/* Pembatas */
+hr {
+    border: none;
+    border-top: 1px solid #440000;
+    margin: 35px 0;
+}
+
+/* ==========================================================================
+   CHOICES SYSTEM (CABANG PILIHAN)
+   ========================================================================== */
+#choices-container {
+    margin-top: 40px;
+    padding: 25px;
+    border: 1px solid rgba(158, 12, 12, 0.2);
+    background: rgba(20, 0, 0, 0.25);
+    box-shadow: 0 0 20px rgba(158, 12, 12, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+#choices-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.choice-button {
+    background: transparent;
+    border: none;
+    color: var(--crimson-bright);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.choice-button::before {
+    content: ">> ";
+    color: var(--crimson);
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.choice-button:hover {
+    color: #fff;
+    text-shadow: 0 0 10px var(--crimson-bright), 0 0 20px var(--crimson);
+    transform: translateX(10px);
+}
+
+.choice-button:hover::before {
+    color: #fff;
+    transform: scaleX(1.3);
+}
+
+/* ==========================================================================
+   COMMON EFFECTS UTILITIES
+   ========================================================================== */
+.blood {
+    color: var(--crimson);
+    text-shadow: 0 0 5px var(--crimson-glow);
+}
+
+.blood-glow {
+    color: var(--crimson-bright);
+    text-shadow: 0 0 8px var(--crimson-bright), 0 0 15px var(--crimson);
+}
+
+/* Glitch Teks */
+.glitch-title {
+    font-size: 46px;
+    font-weight: bold;
+    color: var(--crimson-bright);
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px var(--crimson);
+    position: relative;
+}
+
+/* Transisi Halaman */
+.hidden {
+    display: none !important;
+}
+
+/* Kata Interaktif Ztul-style (Clickable text links) */
+.interactive-word {
+    color: var(--crimson-bright);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline dotted var(--crimson-bright);
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0 3px;
+    animation: word-pulse 1.5s infinite alternate;
+}
+
+@keyframes word-pulse {
+    0% {
+        text-shadow: 0 0 2px var(--crimson-glow);
+    }
+    100% {
+        text-shadow: 0 0 8px var(--crimson-bright), 0 0 12px var(--crimson);
+    }
+}
+
+.interactive-word:hover {
+    color: #fff;
+    text-shadow: 0 0 12px #fff, 0 0 20px var(--crimson-bright);
+    text-decoration: underline solid #fff;
+    transform: scale(1.06);
+}
+
+.interactive-word.clicked {
+    color: #666;
+    font-weight: normal;
+    text-decoration: none;
+    cursor: default;
+    pointer-events: none;
+    text-shadow: none;
+    animation: none;
+}
+
+/* ==========================================================================
+   SCREEN: CINEMATIC INTERMISSION (LAYAR JALAN PULANG)
+   ========================================================================== */
+#cinematic-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 150;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 2.5s ease-in-out;
+    pointer-events: none;
+}
+
+#cinematic-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cinematic-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/file_0000000077f871fabd9827adc05adac2.png');
+    background-size: contain; /* Menggunakan contain agar seluruh kemudi dan tangki motor muat di layar */
+    background-position: center bottom; /* Menggeser gambar ke bawah agar kemudi/motor terlihat jelas */
+    background-repeat: no-repeat;
+    z-index: 1;
+    /* Zoom lambat sinematik agar gambar mati terasa hidup */
+    animation: cinematic-zoom 20s infinite alternate ease-in-out;
+}
+
+@keyframes cinematic-zoom {
+    0% { transform: scale(1.0); }
+    100% { transform: scale(1.08); }
+}
+
+.cinematic-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.9) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.cinematic-prompt {
+    position: relative;
+    z-index: 3;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+    animation: prompt-fade 2s infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes prompt-fade {
+    0% { opacity: 0.15; }
+    100% { opacity: 0.65; }
+}

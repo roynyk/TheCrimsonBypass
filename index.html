@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE CRIMSON BYPASS</title>
+    <!-- Menghubungkan CSS untuk Gaya Visual premium -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Overlay CRT Scanlines & Flicker untuk nuansa retro lo-fi horor -->
+    <div class="crt-overlay"></div>
+    <div class="vignette"></div>
+
+    <!-- Container Utama Game -->
+    <div id="game-container">
+        
+        <!-- Layar Pembuka / Aktivasi Audio (Wajib bagi Browser Modern) -->
+        <div id="intro-screen" class="active">
+            <!-- Video Latar Belakang Glitch Premium -->
+            <video autoplay muted loop playsinline id="intro-bg-video">
+                <source src="videos/Proyek Baru [DB67962].mp4" type="video/mp4">
+            </video>
+
+            <div class="intro-content">
+                <h1 class="glitch-title" data-text="THE CRIMSON BYPASS">THE CRIMSON BYPASS</h1>
+                <p class="intro-sub">A Psychological Horror Story in Medan</p>
+                <div class="warning-box">
+                    <p class="warning-text">🎧 HEADPHONES RECOMMENDED</p>
+                    <p class="warning-sub">This game contains shocking sound effects and a high-tension atmosphere.</p>
+                </div>
+                <button id="start-button">ENTER THE BYPASS</button>
+            </div>
+        </div>
+
+        <!-- Layar Sinematik Intermisi (Gambar Jalan Pulang) -->
+        <div id="cinematic-screen" class="hidden">
+            <div class="cinematic-bg"></div>
+            <div class="cinematic-overlay"></div>
+            <div class="cinematic-prompt">[ Click anywhere to proceed ]</div>
+        </div>
+
+        <!-- Halaman Konten Cerita -->
+        <div id="story-screen" class="hidden">
+            <div id="story-wrapper">
+                <!-- Judul Adegan / Scene Header -->
+                <h2 id="scene-header" class="blood"></h2>
+                
+                <!-- Ruang Cetak Teks Narasi Horor -->
+                <div id="text-container"></div>
+                
+                <!-- Container Tombol Pilihan Cabang Cerita -->
+                <div id="choices-container" class="hidden"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Skrip Game (story.js berisi naskah, script.js berisi mesin game) -->
+    <script src="story.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
