@@ -13,6 +13,7 @@ const storyData = {
   OpeningScene1: {
     title: "PROLOGUE — THE LONELY TRACK",
     bgTag: "opening-bg",
+    bgVideo: "videos/Download action essential blood effect.mp4",
     audio: {
       action: "playBGM",
       src: "audio/audiopapkin-ambient-soundscape-ps-001-344715.mp3",
@@ -25,7 +26,7 @@ const storyData = {
         text: "“Especially the screams.”",
         sfx: "audio/jusatti890-scream-horror-sfx-490908.mp3",
         sfxVolume: 0.7,
-        slowFade: true
+        slowFade: true,
       },
       "Broken streetlights appear.",
       "A long, desolate bypass road stretches infinitely into the darkness outside Medan. Broken lamps flicker like dying stars above cracked, oil-stained asphalt. Giant, rusted container trucks sleep like dead monsters near warehouses from the Belawan industrial route.",
@@ -33,7 +34,7 @@ const storyData = {
       {
         text: "Then—",
         clickSfx: "audio/mixkit-motorcycle-engine-doing-gearshift-2725.wav",
-        clickSfxVolume: 0.8
+        clickSfxVolume: 0.8,
       },
       "<span class='blood-glow'>Two sharp, blood-red headlights pierce the distance.</span>",
       "The cold wind slams violently against my jacket, tearing at my clothes while my motorcycle cuts through the empty bypass. I glance nervously at the glowing clock on my phone mounted beside the handle.",
@@ -57,16 +58,19 @@ const storyData = {
       "They stay right behind me, perfectly matching my speed, tracking my every movement. The roar of their modified engines grows louder, vibrating through my own bike. One of them lets out a long, sharp, mocking whistle that cuts through the wind.",
       "Pure, unadulterated fear crawls slowly into my stomach.",
     ],
+    choiceLayout: "cards",
     choices: [
       {
         text: "SPEED UP (Push the Throttle)",
         nextScene: "SpeedUp",
         sfx: "audio/motorcycle_roar.mp3",
+        video: "videos/Speedup.mp4",
       },
       {
         text: "HIDE (Search for Shelter)",
         nextScene: "HideRoute",
         sfx: "audio/heartbeat.mp3",
+        video: "videos/Hide.mp4",
       },
     ],
   },
@@ -77,6 +81,8 @@ const storyData = {
   SpeedUp: {
     title: "RUNNING BLIND",
     bgTag: "red-screen", // Blood-red screen flash trigger
+    bgVideo: "videos/lv_0_20260524220013.mp4",
+    bgVideoBrightness: "20%",
     audio: {
       action: "playSFX",
       src: "audio/motorcycle_roar.mp3",
@@ -85,7 +91,24 @@ const storyData = {
     text: [
       "I twist the throttle hard, pushing the engine to its absolute limit.",
       "The motorcycle jumps forward violently.",
-      "<strong class='blood-glow'>90 km/h. 95. 96.</strong>",
+      {
+        text: "<strong class='blood-glow'>90 km/h</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1500,
+        align: "left",
+      },
+      {
+        text: "<strong class='blood-glow'>95 km/h</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1500,
+        align: "left",
+      },
+      {
+        text: "<strong class='blood-glow'>96 km/h</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1500,
+        align: "left",
+      },
       "The bypass becomes a terrifying blur of flickering lights and dark shadows. Warm Medan air crashes brutally into my face while I fly past closed ruko buildings covered in faded banners and election posters.",
       "Behind me—the hunters accelerate too, their engines screaming in dark joy.",
       "<blockquote>“CHASE HIM! DON'T LET HIM REACH THE LIGHTS!” someone screams from behind.</blockquote>",
@@ -103,6 +126,9 @@ const storyData = {
   HideRoute: {
     title: "COWERING IN DARKNESS",
     bgTag: "dark-flicker",
+    bgVideo: "videos/lv_0_20260524221653.mp4",
+    bgVideoBrightness: "100%",
+    bgVideoMuted: true,
     flashlight: true, // Turns on the flashlight effect dynamically
     audio: {
       action: "playSFX",
@@ -136,10 +162,13 @@ const storyData = {
   Scene2A: {
     title: "THE HUNTER'S VISOR",
     bgTag: "crimson-pulse",
+    bgVideo: "videos/gemini_generated_video_7fb07571.mp4",
+    bgVideoBrightness: "20%",
+    bgVideoMuted: false, // Memutar suara asli dari dalam berkas video
     audio: {
       action: "playBGM",
       src: "audio/audiopapkin-ambient-soundscape-ps-001-344715.mp3",
-      volume: 0.3,
+      volume: 0.35,
     },
     text: [
       "The perspective shifts.",
@@ -186,6 +215,9 @@ const storyData = {
   Scene2B: {
     title: "THE COLD ALLEY",
     bgTag: "green-screen", // CRT Terminal style shift
+    bgVideo: "videos/lv_0_20260524221653.mp4",
+    bgVideoBrightness: "100%",
+    bgVideoMuted: true,
     flashlight: true, // Turns on the flashlight effect dynamically
     audio: {
       action: "playBGM",
@@ -233,6 +265,8 @@ const storyData = {
   Scene2AOptionA: {
     title: "EPILOGUE — A CHOICE OF CONSCIENCE",
     bgTag: "opening-bg",
+    bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoMuted: true,
     text: [
       "You deliberately drop the heavy metal pipe. It hits the tire with a loud metallic crash!",
       "<span class='sfx'>CLANG!!! Motorcycle swerves wildly</span>",
@@ -245,6 +279,8 @@ const storyData = {
   Scene2AOptionB: {
     title: "EPILOGUE — LOST HUMANITY",
     bgTag: "red-screen",
+    bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoMuted: true,
     text: [
       "You close your eyes and strike with the heavy metal pipe.",
       "A sickening crack echoes through the wind. The victim's motorcycle flips violently, sending rider and steel sliding brutally across the oil-stained bypass asphalt.",
@@ -257,6 +293,8 @@ const storyData = {
   Scene2BOptionA: {
     title: "EPILOGUE — SILENT HERO",
     bgTag: "opening-bg",
+    bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoMuted: true,
     text: [
       "You look back toward the Boss, then turn your head and make eye contact with the boy.",
       "You shake your head slightly, make a 'shh' motion, and turn back to walk out of the dark alley.",
@@ -270,6 +308,8 @@ const storyData = {
   Scene2BOptionB: {
     title: "EPILOGUE — THE COMPLIANT SOUL",
     bgTag: "red-screen",
+    bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoMuted: true,
     text: [
       "<blockquote>“HE’S HERE!” you shout loudly.</blockquote>",
       "You grab the trembling boy's arm and drag him brutally out of the shadows. He cries, pleading for his life, but your grip remains tight.",

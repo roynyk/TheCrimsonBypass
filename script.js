@@ -128,6 +128,51 @@ function loadScene(sceneId) {
 
     // Visuals & Audio
     updateSceneVisuals(scene.bgTag);
+    
+    // Atur video latar belakang cerita dinamis (story-bg-video) jika dikonfigurasi per scene
+    const storyBgVideo = document.getElementById("story-bg-video");
+    if (storyBgVideo) {
+        if (scene.bgVideo) {
+            const sourceEl = storyBgVideo.querySelector("source");
+            const currentSrc = sourceEl ? sourceEl.getAttribute("src") : "";
+            if (currentSrc !== scene.bgVideo) {
+                if (sourceEl) {
+                    sourceEl.setAttribute("src", scene.bgVideo);
+                } else {
+                    const newSource = document.createElement("source");
+                    newSource.setAttribute("src", scene.bgVideo);
+                    newSource.setAttribute("type", "video/mp4");
+                    storyBgVideo.appendChild(newSource);
+                }
+                storyBgVideo.load();
+            }
+            
+            // Atur brightness kustom jika dikonfigurasi per scene, jika tidak gunakan default CSS
+            if (scene.bgVideoBrightness) {
+                storyBgVideo.style.filter = `grayscale(5%) contrast(125%) brightness(${scene.bgVideoBrightness})`;
+            } else {
+                storyBgVideo.style.filter = "";
+            }
+            
+            // Atur status mute video latar kustom per scene (jika bgVideoMuted = false, maka suaranya aktif)
+            if (scene.bgVideoMuted === false) {
+                storyBgVideo.muted = false;
+                // Sedikit kecilkan volume audio video agar tidak menabrak suara BGM utama
+                storyBgVideo.volume = 0.35; 
+            } else {
+                storyBgVideo.muted = true;
+            }
+            
+            storyBgVideo.classList.remove("hidden");
+            storyBgVideo.play().catch(e => console.log("Gagal memutar video latar cerita:", e));
+        } else {
+            storyBgVideo.pause();
+            storyBgVideo.muted = true; // Selalu kembalikan ke keadaan senyap secara aman
+            storyBgVideo.style.filter = ""; // Reset filter
+            storyBgVideo.classList.add("hidden");
+        }
+    }
+
     if (scene.audio) {
         if (scene.audio.action === "playBGM") {
             AudioEngine.playBGM(scene.audio.src, scene.audio.volume);
@@ -211,6 +256,9 @@ function printNextLine() {
     let playLineSFX = null;
     let sfxVolume = 1.0;
     let isSlow = false;
+    let isAuto = false;
+    let autoDelay = 1000;
+    let forcedAlign = null;
 
     if (typeof lineData === "object" && lineData !== null) {
         lineText = lineData.text;
@@ -221,12 +269,25 @@ function printNextLine() {
         if (lineData.slowFade) {
             isSlow = true;
         }
+        if (lineData.autoAdvance) {
+            isAuto = true;
+            autoDelay = lineData.autoAdvanceDelay || 1000;
+        }
+        if (lineData.align) {
+            forcedAlign = lineData.align;
+        }
     } else {
         lineText = lineData;
     }
 
     // Lapisi satu kata acak dengan elemen interaktif agar bisa diklik (Ztul style)
-    const processedText = makeRandomWordInteractive(lineText);
+    // Jika baris bersifat otomatis (autoAdvance), jangan disuntikkan kata interaktif
+    let processedText = "";
+    if (isAuto) {
+        processedText = lineText;
+    } else {
+        processedText = makeRandomWordInteractive(lineText);
+    }
 
     // Membuat elemen paragraf baru
     const p = document.createElement("p");
@@ -235,7 +296,11 @@ function printNextLine() {
     // Menetapkan secara tegas kolom kiri (story-p-left) atau kolom kanan (story-p-right)
     // Kalimat PERTAMA di setiap awal adegan/judul (currentLineIndex === 0) akan SELALU MULAI DARI KIRI demi kerapian struktur pembuka
     let alignmentClass = "";
-    if (currentLineIndex === 0) {
+    if (forcedAlign === "left") {
+        alignmentClass = "story-p-left";
+    } else if (forcedAlign === "right") {
+        alignmentClass = "story-p-right";
+    } else if (currentLineIndex === 0) {
         alignmentClass = "story-p-left";
     } else {
         // Kalimat-kalimat selanjutnya diacak secara seimbang 50/50 antara kiri dan kanan
@@ -264,33 +329,42 @@ function printNextLine() {
         p.classList.add("visible");
         storyWrapper.scrollTop = storyWrapper.scrollHeight;
         
-        // Cari span kata interaktif yang baru saja disuntikkan
-        const interactiveSpan = p.querySelector(".interactive-word");
-        if (interactiveSpan) {
-            // Mencegah klik ganda saat transisi sedang berjalan
-            isTextPrinting = true;
-            
-            interactiveSpan.addEventListener("click", (e) => {
-                e.stopPropagation(); // Mencegah penyebaran event
-                
-                // Putar SFX saat kata interaktif diklik jika dikonfigurasi
-                if (typeof lineData === "object" && lineData !== null && lineData.clickSfx) {
-                    AudioEngine.playSFX(lineData.clickSfx, lineData.clickSfxVolume || 1.0);
-                }
-
-                // Ubah status kata menjadi telah diklik (berubah warna abu-abu & mati kliknya)
-                interactiveSpan.classList.add("clicked");
+        if (isAuto) {
+            // Mekanisme otomatis maju tanpa klik
+            isTextPrinting = true; // Kunci input selama baris otomatis sedang berproses
+            setTimeout(() => {
                 isTextPrinting = false;
-                
-                // Naikkan indeks baris dan cetak baris berikutnya
                 currentLineIndex++;
                 printNextLine();
-            });
+            }, autoDelay);
         } else {
-            // Pengaman otomatis jika tidak ada elemen klik, cetak otomatis setelah jeda singkat
-            currentLineIndex++;
-            isTextPrinting = false;
-            setTimeout(printNextLine, 1200);
+            // Mekanisme interaksi klik kata (Ztul style)
+            const interactiveSpan = p.querySelector(".interactive-word");
+            if (interactiveSpan) {
+                isTextPrinting = true;
+                
+                interactiveSpan.addEventListener("click", (e) => {
+                    e.stopPropagation(); // Mencegah penyebaran event
+                    
+                    // Putar SFX saat kata interaktif diklik jika dikonfigurasi
+                    if (typeof lineData === "object" && lineData !== null && lineData.clickSfx) {
+                        AudioEngine.playSFX(lineData.clickSfx, lineData.clickSfxVolume || 1.0);
+                    }
+
+                    // Ubah status kata menjadi telah diklik (berubah warna abu-abu & mati kliknya)
+                    interactiveSpan.classList.add("clicked");
+                    isTextPrinting = false;
+                    
+                    // Naikkan indeks baris dan cetak baris berikutnya
+                    currentLineIndex++;
+                    printNextLine();
+                });
+            } else {
+                // Pengaman otomatis jika tidak ada elemen klik, cetak otomatis setelah jeda singkat
+                currentLineIndex++;
+                isTextPrinting = false;
+                setTimeout(printNextLine, 1200);
+            }
         }
     }, 100);
 }
@@ -301,56 +375,141 @@ function showChoices() {
     if (!scene || !scene.choices || scene.choices.length === 0) return;
 
     choicesContainer.innerHTML = "";
-    choicesContainer.classList.remove("hidden");
+    choicesContainer.classList.remove("hidden", "cards-layout");
     
-    scene.choices.forEach(choice => {
-        const button = document.createElement("button");
-        button.className = "choice-button";
-        button.innerHTML = choice.text;
+    if (scene.choiceLayout === "cards") {
+        // TATA LETAK KARTU PREVIEW VIDEO PREMIUM
+        choicesContainer.classList.add("cards-layout");
         
-        button.addEventListener("click", (e) => {
-            e.stopPropagation(); // Mencegah klik menyebar ke pengetikan teks
+        scene.choices.forEach(choice => {
+            const card = document.createElement("div");
+            card.className = "choice-card";
             
-            // Putar SFX jika ada
-            if (choice.sfx) {
-                AudioEngine.playSFX(choice.sfx, 0.7);
-            }
+            // Create Video Element
+            const video = document.createElement("video");
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.className = "choice-card-video";
             
-            // Intersepsi tombol "Try Again" untuk kembali ke menu utama dan mereset permainan
-            if (choice.text === "Try Again") {
-                // Hentikan audio ambient soundscape secara instan
-                AudioEngine.stopBGM();
+            const source = document.createElement("source");
+            source.src = choice.video;
+            source.type = "video/mp4";
+            video.appendChild(source);
+            card.appendChild(video);
+            
+            // Overlay untuk gradien kegelapan
+            const overlay = document.createElement("div");
+            overlay.className = "choice-card-overlay";
+            card.appendChild(overlay);
+            
+            // Konten teks
+            const content = document.createElement("div");
+            content.className = "choice-card-content";
+            
+            const arrow = document.createElement("span");
+            arrow.className = "choice-card-arrow";
+            arrow.innerHTML = ">> ";
+            
+            const text = document.createElement("span");
+            text.className = "choice-card-text";
+            text.innerHTML = choice.text;
+            
+            content.appendChild(arrow);
+            content.appendChild(text);
+            card.appendChild(content);
+            
+            // Event Listeners Hover
+            card.addEventListener("mouseenter", () => {
+                video.play().catch(err => console.log("Gagal memutar video kartu:", err));
+                card.classList.add("hovered");
                 
-                // Sembunyikan layar cerita dan tampilkan kembali intro menu utama
-                storyScreen.classList.add("hidden");
-                introScreen.classList.remove("hidden");
+                const allCards = choicesContainer.querySelectorAll(".choice-card");
+                allCards.forEach(c => {
+                    if (c !== card) {
+                        c.classList.add("dimmed");
+                    }
+                });
+            });
+            
+            card.addEventListener("mouseleave", () => {
+                video.pause();
+                card.classList.remove("hovered");
                 
-                // Nyalakan kembali video glitch menu utama (dalam keadaan senyap/muted)
-                const video = document.getElementById("intro-bg-video");
-                if (video) {
-                    video.muted = true;
-                    video.currentTime = 0;
-                    video.play().catch(err => console.log("Gagal memutar ulang video menu:", err));
+                const allCards = choicesContainer.querySelectorAll(".choice-card");
+                allCards.forEach(c => {
+                    c.classList.remove("dimmed");
+                });
+            });
+            
+            // Event Listener Klik
+            card.addEventListener("click", (e) => {
+                e.stopPropagation();
+                
+                if (choice.sfx) {
+                    AudioEngine.playSFX(choice.sfx, 0.7);
                 }
                 
-                // Daftarkan ulang pendengar klik sekali untuk mengaktifkan suara video glitch
-                document.addEventListener("click", () => {
-                    const video = document.getElementById("intro-bg-video");
-                    if (video && video.muted) {
-                        video.muted = false;
-                        video.play().catch(err => console.log(err));
-                    }
-                }, { once: true });
+                const allVideos = choicesContainer.querySelectorAll(".choice-card-video");
+                allVideos.forEach(v => v.pause());
                 
-                return; // Selesai, hentikan pemuatan scene agar tidak langsung restart di story screen
-            }
+                choicesContainer.classList.add("hidden");
+                loadScene(choice.nextScene);
+            });
             
-            // Pindah Scene
-            loadScene(choice.nextScene);
+            choicesContainer.appendChild(card);
         });
-
-        choicesContainer.appendChild(button);
-    });
+    } else {
+        // TATA LETAK BUTTON KLASIK (DEFAULT)
+        scene.choices.forEach(choice => {
+            const button = document.createElement("button");
+            button.className = "choice-button";
+            button.innerHTML = choice.text;
+            
+            button.addEventListener("click", (e) => {
+                e.stopPropagation(); // Mencegah klik menyebar ke pengetikan teks
+                
+                // Putar SFX jika ada
+                if (choice.sfx) {
+                    AudioEngine.playSFX(choice.sfx, 0.7);
+                }
+                
+                // Intersepsi tombol "Try Again" untuk kembali ke menu utama dan mereset permainan
+                if (choice.text === "Try Again") {
+                    // Hentikan audio ambient soundscape secara instan
+                    AudioEngine.stopBGM();
+                    
+                    // Sembunyikan layar cerita dan tampilkan kembali intro menu utama
+                    storyScreen.classList.add("hidden");
+                    introScreen.classList.remove("hidden");
+                    
+                    // Nyalakan kembali video glitch menu utama (dalam keadaan senyap/muted)
+                    const video = document.getElementById("intro-bg-video");
+                    if (video) {
+                        video.muted = true;
+                        video.currentTime = 0;
+                        video.play().catch(err => console.log("Gagal memutar ulang video menu:", err));
+                    }
+                    
+                    // Daftarkan ulang pendengar klik sekali untuk mengaktifkan suara video glitch
+                    document.addEventListener("click", () => {
+                        const video = document.getElementById("intro-bg-video");
+                        if (video && video.muted) {
+                            video.muted = false;
+                            video.play().catch(err => console.log(err));
+                        }
+                    }, { once: true });
+                    
+                    return; // Selesai, hentikan pemuatan scene agar tidak langsung restart di story screen
+                }
+                
+                // Pindah Scene
+                loadScene(choice.nextScene);
+            });
+    
+            choicesContainer.appendChild(button);
+        });
+    }
 
     setTimeout(() => {
         choicesContainer.classList.add("visible");
