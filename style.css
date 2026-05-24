@@ -473,21 +473,16 @@ hr {
     pointer-events: auto;
 }
 
-.cinematic-bg {
+#cinematic-bg-video {
     position: absolute;
-    inset: 0;
-    background-image: url('images/file_0000000077f871fabd9827adc05adac2.png');
-    background-size: contain; /* Menggunakan contain agar seluruh kemudi dan tangki motor muat di layar */
-    background-position: center bottom; /* Menggeser gambar ke bawah agar kemudi/motor terlihat jelas */
-    background-repeat: no-repeat;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
     z-index: 1;
-    /* Zoom lambat sinematik agar gambar mati terasa hidup */
-    animation: cinematic-zoom 20s infinite alternate ease-in-out;
-}
-
-@keyframes cinematic-zoom {
-    0% { transform: scale(1.0); }
-    100% { transform: scale(1.08); }
+    filter: grayscale(10%) contrast(110%) brightness(75%);
+    pointer-events: none;
 }
 
 .cinematic-overlay {

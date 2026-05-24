@@ -14,6 +14,7 @@ let currentSceneId = "OpeningScene1";
 let currentLineIndex = 0;
 let isTextPrinting = false;
 let currentBGM = null;
+let cinematicEngineAudio = null;
 
 // DOM Elements
 const introScreen = document.getElementById("intro-screen");
@@ -381,12 +382,24 @@ startButton.addEventListener("click", () => {
     // 1. Sembunyikan layar menu utama
     introScreen.classList.add("hidden");
     
-    // 2. Tampilkan layar sinematik (gambar jalan pulang) secara perlahan (fade-in)
+    // 2. Tampilkan layar sinematik (video jalan pulang) secara perlahan (fade-in)
     const cinematicScreen = document.getElementById("cinematic-screen");
+    const cinematicVideo = document.getElementById("cinematic-bg-video");
+    
     cinematicScreen.classList.remove("hidden");
+    if (cinematicVideo) {
+        cinematicVideo.currentTime = 0;
+        cinematicVideo.play().catch(e => console.log("Gagal memutar video sinematik:", e));
+    }
+    
+    // Putar suara mesin motor bebek/sport secara looping saat berkendara
+    cinematicEngineAudio = new Audio("audio/mixkit-motocross-motorcycle-engine-2727 (1).wav");
+    cinematicEngineAudio.volume = 0.4;
+    cinematicEngineAudio.loop = true;
+    cinematicEngineAudio.play().catch(e => console.log("Gagal memutar suara mesin sinematik:", e));
     
     // Mulai putar musik latar belakang (ambient soundscape baru) untuk membangun atmosfer horor
-    AudioEngine.playBGM("audio/audiopapkin-ambient-soundscape-ps-001-344715.mp3", 0.4);
+    AudioEngine.playBGM("audio/audiopapkin-ambient-soundscape-ps-001-344715.mp3", 0.35);
 
     setTimeout(() => {
         cinematicScreen.classList.add("active");
@@ -397,9 +410,27 @@ startButton.addEventListener("click", () => {
         // Efek transisi memudar perlahan ke hitam (fade-out)
         cinematicScreen.classList.remove("active");
         
+        // Pudar suara mesin motor secara halus selama masa transisi 2.5 detik
+        if (cinematicEngineAudio) {
+            let fadeInterval = setInterval(() => {
+                if (cinematicEngineAudio && cinematicEngineAudio.volume > 0.03) {
+                    cinematicEngineAudio.volume -= 0.03;
+                } else {
+                    clearInterval(fadeInterval);
+                    if (cinematicEngineAudio) {
+                        cinematicEngineAudio.pause();
+                        cinematicEngineAudio = null;
+                    }
+                }
+            }, 100);
+        }
+        
         // Jeda waktu menunggu layar sinematik selesai memudar ke hitam (2.5 detik)
         setTimeout(() => {
             cinematicScreen.classList.add("hidden");
+            if (cinematicVideo) {
+                cinematicVideo.pause();
+            }
             storyScreen.classList.remove("hidden");
             
             // Masuk ke Scene 1 utama game
