@@ -14,6 +14,7 @@ const storyData = {
     title: "PROLOGUE — THE LONELY TRACK",
     bgTag: "opening-bg",
     bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoBrightness: "140%",
     audio: {
       action: "playBGM",
       src: "audio/audiopapkin-ambient-soundscape-ps-001-344715.mp3",
@@ -69,7 +70,7 @@ const storyData = {
       {
         text: "HIDE (Search for Shelter)",
         nextScene: "HideRoute",
-        sfx: "audio/heartbeat.mp3",
+        sfx: "audio/suaranafas.mp3",
         video: "videos/Hide.mp4",
       },
     ],
@@ -90,24 +91,32 @@ const storyData = {
     },
     text: [
       "I twist the throttle hard, pushing the engine to its absolute limit.",
-      "The motorcycle jumps forward violently.",
+      {
+        text: "The motorcycle jumps forward violently.",
+        clickSfx: "audio/soundngebut.wav",
+        clickSfxVolume: 0.95,
+        clickSfxFadeIn: 3000
+      },
       {
         text: "<strong class='blood-glow'>90 km/h</strong>",
         autoAdvance: true,
-        autoAdvanceDelay: 1500,
+        autoAdvanceDelay: 3000,
         align: "left",
+        slowFade: true,
       },
       {
         text: "<strong class='blood-glow'>95 km/h</strong>",
         autoAdvance: true,
-        autoAdvanceDelay: 1500,
+        autoAdvanceDelay: 3000,
         align: "left",
+        slowFade: true,
       },
       {
         text: "<strong class='blood-glow'>96 km/h</strong>",
         autoAdvance: true,
-        autoAdvanceDelay: 1500,
+        autoAdvanceDelay: 3000,
         align: "left",
+        slowFade: true,
       },
       "The bypass becomes a terrifying blur of flickering lights and dark shadows. Warm Medan air crashes brutally into my face while I fly past closed ruko buildings covered in faded banners and election posters.",
       "Behind me—the hunters accelerate too, their engines screaming in dark joy.",
@@ -132,7 +141,7 @@ const storyData = {
     flashlight: true, // Turns on the flashlight effect dynamically
     audio: {
       action: "playSFX",
-      src: "audio/heartbeat.mp3",
+      src: "audio/suaranafas.mp3",
       volume: 0.9,
     },
     text: [
@@ -144,7 +153,27 @@ const storyData = {
       "I pull out my phone with shaking, sweating hands.",
       "<strong class='blood'>No signal. Zero bars. Of course.</strong>",
       "Then—the heavy thud of engines grows closer.",
-      "Closer. Closer. Closer.",
+      {
+        text: "<strong class='blood-glow'>Closer.</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1800,
+        align: "left",
+        slowFade: true,
+      },
+      {
+        text: "<strong class='blood-glow'>Closer.</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1800,
+        align: "left",
+        slowFade: true,
+      },
+      {
+        text: "<strong class='blood-glow'>Closer.</strong>",
+        autoAdvance: true,
+        autoAdvanceDelay: 1800,
+        align: "left",
+        slowFade: true,
+      },
       "The headlights sweep across the cracked walls of the shop. A motorcycle stops just meters away. The engine idles loudly.",
       "Then, the heavy stomp of boots follows. Slow. Heavy. Deliberate.",
       "A voice, cold and sharp, cuts through the darkness.",
@@ -266,9 +295,14 @@ const storyData = {
     title: "EPILOGUE — A CHOICE OF CONSCIENCE",
     bgTag: "opening-bg",
     bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
-      "You deliberately drop the heavy metal pipe. It hits the tire with a loud metallic crash!",
+      {
+        text: "You deliberately drop the heavy metal pipe. It hits the tire with a loud metallic crash!",
+        clickSfx: "audio/untukclang.mp3",
+        clickSfxVolume: 0.9
+      },
       "<span class='sfx'>CLANG!!! Motorcycle swerves wildly</span>",
       "The bike loses balance. The Boss curses loudly as you both crash hard onto the dirt, letting the victim speed away into the distant safety of Medan's city lights.",
       "You are bruised, and the Boss is furious, but as you look at the empty bypass road, your chest feels incredibly light.",
@@ -280,6 +314,7 @@ const storyData = {
     title: "EPILOGUE — LOST HUMANITY",
     bgTag: "red-screen",
     bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
       "You close your eyes and strike with the heavy metal pipe.",
@@ -294,6 +329,7 @@ const storyData = {
     title: "EPILOGUE — SILENT HERO",
     bgTag: "opening-bg",
     bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
       "You look back toward the Boss, then turn your head and make eye contact with the boy.",
@@ -309,6 +345,7 @@ const storyData = {
     title: "EPILOGUE — THE COMPLIANT SOUL",
     bgTag: "red-screen",
     bgVideo: "videos/Download action essential blood effect.mp4",
+    bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
       "<blockquote>“HE’S HERE!” you shout loudly.</blockquote>",

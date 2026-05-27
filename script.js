@@ -73,10 +73,30 @@ const AudioEngine = {
         }
     },
 
-    playSFX: function(src, volume = 1.0) {
+    playSFX: function(src, volume = 1.0, fadeInDuration = 0) {
         const sfx = new Audio(src);
-        sfx.volume = volume;
-        sfx.play().catch(e => console.log("Gagal memutar SFX: " + e));
+        
+        // Clamp target volume safely between 0.0 and 1.0
+        const targetVolume = Math.min(1.0, Math.max(0, volume));
+        
+        if (fadeInDuration > 0) {
+            sfx.volume = 0;
+            sfx.play().catch(e => console.log("Gagal memutar SFX: " + e));
+            
+            const start = performance.now();
+            const interval = setInterval(() => {
+                const elapsed = performance.now() - start;
+                if (elapsed >= fadeInDuration) {
+                    sfx.volume = targetVolume;
+                    clearInterval(interval);
+                } else {
+                    sfx.volume = Math.min(1.0, Math.max(0, (elapsed / fadeInDuration) * targetVolume));
+                }
+            }, 50);
+        } else {
+            sfx.volume = targetVolume;
+            sfx.play().catch(e => console.log("Gagal memutar SFX: " + e));
+        }
     }
 };
 
@@ -177,7 +197,7 @@ function loadScene(sceneId) {
         if (scene.audio.action === "playBGM") {
             AudioEngine.playBGM(scene.audio.src, scene.audio.volume);
         } else if (scene.audio.action === "playSFX") {
-            AudioEngine.playSFX(scene.audio.src, scene.audio.volume);
+            AudioEngine.playSFX(scene.audio.src, scene.audio.volume, scene.audio.fadeIn || 0);
         }
     }
 
@@ -255,6 +275,7 @@ function printNextLine() {
     let lineText = "";
     let playLineSFX = null;
     let sfxVolume = 1.0;
+    let sfxFadeIn = 0;
     let isSlow = false;
     let isAuto = false;
     let autoDelay = 1000;
@@ -265,6 +286,7 @@ function printNextLine() {
         if (lineData.sfx) {
             playLineSFX = lineData.sfx;
             sfxVolume = lineData.sfxVolume || 1.0;
+            sfxFadeIn = lineData.sfxFadeIn || 0;
         }
         if (lineData.slowFade) {
             isSlow = true;
@@ -321,7 +343,7 @@ function printNextLine() {
 
     // Putar SFX baris secara instan jika ada
     if (playLineSFX) {
-        AudioEngine.playSFX(playLineSFX, sfxVolume);
+        AudioEngine.playSFX(playLineSFX, sfxVolume, sfxFadeIn);
     }
 
     // Trigger transisi fade-in
@@ -348,7 +370,7 @@ function printNextLine() {
                     
                     // Putar SFX saat kata interaktif diklik jika dikonfigurasi
                     if (typeof lineData === "object" && lineData !== null && lineData.clickSfx) {
-                        AudioEngine.playSFX(lineData.clickSfx, lineData.clickSfxVolume || 1.0);
+                        AudioEngine.playSFX(lineData.clickSfx, lineData.clickSfxVolume || 1.0, lineData.clickSfxFadeIn || 0);
                     }
 
                     // Ubah status kata menjadi telah diklik (berubah warna abu-abu & mati kliknya)
