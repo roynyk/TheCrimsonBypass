@@ -46,9 +46,19 @@ const storyData = {
       "My father’s severe warning suddenly crashes back into my mind.",
       "<blockquote>“Never trust the bypass after midnight. The shadows out there are always hungry.”</blockquote>",
       "I used to laugh whenever he said that, dismissing it as old superstition. Now, looking at the endless black void ahead, I understand why.",
-      "My phone vibrates violently against the handlebar.<br><blockquote><strong>MOTHER:</strong> <em>“Are you still outside? Please hurry home.”</em></blockquote>",
+      {
+        text: "My phone vibrates violently against the handlebar.",
+        clickSfx: "audio/soundmother.mp3",
+        clickSfxVolume: 0.95
+      },
+      "<blockquote><strong>MOTHER:</strong> <em>“Are you still outside? Please hurry home.”</em></blockquote>",
       "Before my trembling thumb can even touch the screen to reply—",
-      "I notice headlights exploding in my cracked rearview mirror.",
+      {
+        text: "I notice headlights exploding in my cracked rearview mirror.",
+        clickSfx: "audio/soundngebut.wav",
+        clickSfxVolume: 0.9,
+        clickSfxFadeIn: 2500
+      },
       "Two motorcycles. Far away, but moving with terrifying speed. Very fast. Closing the gap like predators catching a scent.",
       "I look forward, praying, then look back into the mirror.",
       "They are much closer now.",
@@ -118,8 +128,16 @@ const storyData = {
         align: "left",
         slowFade: true,
       },
-      "The bypass becomes a terrifying blur of flickering lights and dark shadows. Warm Medan air crashes brutally into my face while I fly past closed ruko buildings covered in faded banners and election posters.",
-      "Behind me—the hunters accelerate too, their engines screaming in dark joy.",
+      {
+        text: "The bypass becomes a terrifying blur of flickering lights and dark shadows. Warm Medan air crashes brutally into my face while I fly past closed ruko buildings covered in faded banners and election posters.",
+        clickSfx: "audio/darkjoy.mp3",
+        clickSfxVolume: 0.95
+      },
+      {
+        text: "Behind me—the hunters accelerate too, their engines screaming in dark joy.",
+        clickSfx: "audio/soundculik.mp3",
+        clickSfxVolume: 0.95
+      },
       "<blockquote>“CHASE HIM! DON'T LET HIM REACH THE LIGHTS!” someone screams from behind.</blockquote>",
       "My heartbeat becomes louder than the engine.",
       "I nearly lose control after hitting a massive pothole near the industrial roadside. The motorcycle shakes violently beneath me. For one horrible, breathless second, I think I’m going to crash.",
@@ -148,7 +166,11 @@ const storyData = {
       "Panic takes over.",
       "I suddenly turn left, swerving into a narrow, unlit roadside area beside a closed, abandoned shop. I kill the engine instantly. Flipped the switch.",
       "Total silence.",
-      "Only the sound of my ragged, terrified breathing remains.",
+      {
+        text: "Only the sound of my ragged, terrified breathing remains.",
+        clickSfx: "audio/soundkayukayu.mp3",
+        clickSfxVolume: 0.95
+      },
       "I crouch low behind a stack of old wooden crates, trying to shrink into the shadows. The suffocating smell of stagnant rainwater, cheap cigarettes, and old cooking oil fills the air. Nearby, a broken Indomaret sign flickers weakly, buzzing like an angry insect.",
       "I pull out my phone with shaking, sweating hands.",
       "<strong class='blood'>No signal. Zero bars. Of course.</strong>",
@@ -317,7 +339,11 @@ const storyData = {
     bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
-      "You close your eyes and strike with the heavy metal pipe.",
+      {
+        text: "You close your eyes and strike with the heavy metal pipe.",
+        clickSfx: "audio/sickening.mp3",
+        clickSfxVolume: 0.95
+      },
       "A sickening crack echoes through the wind. The victim's motorcycle flips violently, sending rider and steel sliding brutally across the oil-stained bypass asphalt.",
       "The Boss cheers in triumph, stopping the bike to strip the fallen rider of his belongings.",
       "You stand in the shadows, holding the heavy metal pipe in hands that will never feel clean again.",
@@ -332,7 +358,11 @@ const storyData = {
     bgVideoBrightness: "140%",
     bgVideoMuted: true,
     text: [
-      "You look back toward the Boss, then turn your head and make eye contact with the boy.",
+      {
+        text: "You look back toward the Boss, then turn your head and make eye contact with the boy.",
+        clickSfx: "audio/silenthero.mp3",
+        clickSfxVolume: 0.95
+      },
       "You shake your head slightly, make a 'shh' motion, and turn back to walk out of the dark alley.",
       "<blockquote>“Nothing here, boss! Just some empty crates and a stray cat!” you shout.</blockquote>",
       "The Boss curses, kicks a stone in frustration, and tells you to get back on the bike to search the inside roads.",
