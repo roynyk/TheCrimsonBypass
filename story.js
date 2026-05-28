@@ -30,7 +30,7 @@ const storyData = {
         slowFade: true,
       },
       "Broken streetlights appear.",
-      "A long, desolate bypass road stretches infinitely into the darkness outside Medan. Broken lamps flicker like dying stars above cracked, oil-stained asphalt. Giant, rusted container trucks sleep like dead monsters near warehouses from the Belawan industrial route.",
+      "A long, desolate bypass road stretches infinitely into the darkness outside Medan. Broken lamps flicker like dying stars above cracked, oil-stained asphalt. Giant, rusted container trucks sleep like dead monsters near warehouses from the industrial route.",
       "The night air feels warm, suffocating, and dirty. Far away, a faint, melancholic song echoes from a small roadside coffee shop, swallowed quickly by the hollow wind. A mosque speaker reverberates softly in the background, a distant reminder of a peaceful world that feels entirely out of reach.",
       {
         text: "Then—",
@@ -49,7 +49,7 @@ const storyData = {
       {
         text: "My phone vibrates violently against the handlebar.",
         clickSfx: "audio/soundmother.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
       "<blockquote><strong>MOTHER:</strong> <em>“Are you still outside? Please hurry home.”</em></blockquote>",
       "Before my trembling thumb can even touch the screen to reply—",
@@ -57,7 +57,7 @@ const storyData = {
         text: "I notice headlights exploding in my cracked rearview mirror.",
         clickSfx: "audio/soundngebut.wav",
         clickSfxVolume: 0.9,
-        clickSfxFadeIn: 2500
+        clickSfxFadeIn: 2500,
       },
       "Two motorcycles. Far away, but moving with terrifying speed. Very fast. Closing the gap like predators catching a scent.",
       "I look forward, praying, then look back into the mirror.",
@@ -105,7 +105,7 @@ const storyData = {
         text: "The motorcycle jumps forward violently.",
         clickSfx: "audio/soundngebut.wav",
         clickSfxVolume: 0.95,
-        clickSfxFadeIn: 3000
+        clickSfxFadeIn: 3000,
       },
       {
         text: "<strong class='blood-glow'>90 km/h</strong>",
@@ -131,12 +131,12 @@ const storyData = {
       {
         text: "The bypass becomes a terrifying blur of flickering lights and dark shadows. Warm Medan air crashes brutally into my face while I fly past closed ruko buildings covered in faded banners and election posters.",
         clickSfx: "audio/darkjoy.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
       {
         text: "Behind me—the hunters accelerate too, their engines screaming in dark joy.",
         clickSfx: "audio/soundculik.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
       "<blockquote>“CHASE HIM! DON'T LET HIM REACH THE LIGHTS!” someone screams from behind.</blockquote>",
       "My heartbeat becomes louder than the engine.",
@@ -169,9 +169,9 @@ const storyData = {
       {
         text: "Only the sound of my ragged, terrified breathing remains.",
         clickSfx: "audio/soundkayukayu.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
-      "I crouch low behind a stack of old wooden crates, trying to shrink into the shadows. The suffocating smell of stagnant rainwater, cheap cigarettes, and old cooking oil fills the air. Nearby, a broken Indomaret sign flickers weakly, buzzing like an angry insect.",
+      "I crouch low behind a stack of old wooden crates, trying to shrink into the shadows. The suffocating smell of stagnant rainwater, cheap cigarettes, and old cooking oil fills the air. Nearby, a broken Supermarket sign flickers weakly, buzzing like an angry insect.",
       "I pull out my phone with shaking, sweating hands.",
       "<strong class='blood'>No signal. Zero bars. Of course.</strong>",
       "Then—the heavy thud of engines grows closer.",
@@ -323,7 +323,7 @@ const storyData = {
       {
         text: "You deliberately drop the heavy metal pipe. It hits the tire with a loud metallic crash!",
         clickSfx: "audio/untukclang.mp3",
-        clickSfxVolume: 0.9
+        clickSfxVolume: 0.9,
       },
       "<span class='sfx'>CLANG!!! Motorcycle swerves wildly</span>",
       "The bike loses balance. The Boss curses loudly as you both crash hard onto the dirt, letting the victim speed away into the distant safety of Medan's city lights.",
@@ -342,7 +342,7 @@ const storyData = {
       {
         text: "You close your eyes and strike with the heavy metal pipe.",
         clickSfx: "audio/sickening.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
       "A sickening crack echoes through the wind. The victim's motorcycle flips violently, sending rider and steel sliding brutally across the oil-stained bypass asphalt.",
       "The Boss cheers in triumph, stopping the bike to strip the fallen rider of his belongings.",
@@ -361,7 +361,7 @@ const storyData = {
       {
         text: "You look back toward the Boss, then turn your head and make eye contact with the boy.",
         clickSfx: "audio/silenthero.mp3",
-        clickSfxVolume: 0.95
+        clickSfxVolume: 0.95,
       },
       "You shake your head slightly, make a 'shh' motion, and turn back to walk out of the dark alley.",
       "<blockquote>“Nothing here, boss! Just some empty crates and a stray cat!” you shout.</blockquote>",
